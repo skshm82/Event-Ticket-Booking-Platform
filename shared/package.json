@@ -1,0 +1,7 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "Shared constants for event-ticket-booking platform",
+  "main": "constants.js",
+  "private": true
+}

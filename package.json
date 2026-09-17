@@ -1,0 +1,21 @@
+{
+  "name": "event-ticket-booking",
+  "version": "1.0.0",
+  "description": "Real-time event ticket booking platform with Redis-powered seat locks, BullMQ workers, and Socket.io live updates",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run worker\"",
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run dev",
+    "worker": "cd worker && npm run dev",
+    "seed": "cd server && node src/seed/seed.js",
+    "seed:prod": "cd server && node src/seed/seed.js --prod",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install && cd ../worker && npm install",
+    "test": "cd server && npm test",
+    "test:client": "cd client && npm test",
+    "build": "cd client && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

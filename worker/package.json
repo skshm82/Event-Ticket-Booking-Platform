@@ -1,0 +1,17 @@
+{
+  "name": "event-ticket-worker",
+  "version": "1.0.0",
+  "description": "BullMQ worker process for event ticket booking platform",
+  "main": "src/index.js",
+  "private": true,
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "bullmq": "^5.34.9",
+    "dotenv": "^16.4.7",
+    "ioredis": "^5.4.2",
+    "mongoose": "^8.9.5"
+  }
+}
