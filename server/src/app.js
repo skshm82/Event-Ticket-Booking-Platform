@@ -13,10 +13,11 @@ app.use(
 );
 app.use(express.json());
 
-// Routes (will be added in Day 2)
-// app.use('/api/venues', require('./routes/venueRoutes'));
-// app.use('/api/events', require('./routes/eventRoutes'));
-// app.use('/api/bookings', require('./routes/bookingRoutes'));
+// Routes
+app.use('/api/venues', require('./routes/venueRoutes'));
+app.use('/api/events', require('./routes/eventRoutes'));
+app.use('/api/events/:eventId/seats', require('./routes/seatRoutes'));
+app.use('/api/bookings', require('./routes/bookingRoutes'));
 
 // Health check
 app.get('/api/health', async (req, res) => {
