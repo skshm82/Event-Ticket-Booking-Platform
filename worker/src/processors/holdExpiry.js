@@ -1,5 +1,5 @@
-const Seat = require('../../../../server/src/models/Seat');
-const { SEAT_STATUS } = require('../../../../shared/constants');
+const Seat = require('../../../server/src/models/Seat');
+const { SEAT_STATUS } = require('../../../shared/constants');
 
 /**
  * Process a hold-expiry job.

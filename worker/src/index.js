@@ -3,7 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const { Worker } = require('bullmq');
 const Redis = require('ioredis');
-const { QUEUE_NAMES } = require('../../../shared/constants');
+const { QUEUE_NAMES } = require('../../shared/constants');
 
 // Import processors
 const processHoldExpiry = require('./processors/holdExpiry');

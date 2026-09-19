@@ -3,11 +3,17 @@ const { SOCKET_EVENTS } = require('../../../shared/constants');
 
 let io = null;
 
-const initSocket = (httpServer, clientUrl) => {
+const initSocket = (httpServer) => {
   io = new Server(httpServer, {
     cors: {
-      origin: clientUrl || 'http://localhost:5173',
+      origin: (origin, callback) => {
+        if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin)) {
+          return callback(null, true);
+        }
+        return callback(null, false);
+      },
       methods: ['GET', 'POST'],
+      credentials: true,
     },
   });
 
