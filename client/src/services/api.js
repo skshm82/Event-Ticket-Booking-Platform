@@ -26,4 +26,44 @@ api.interceptors.response.use(
   }
 );
 
+// ── Events ───────────────────────────────────────────────
+
+export const getEvents = (category) => {
+  const params = {};
+  if (category && category !== 'all') params.category = category;
+  return api.get('/events', { params });
+};
+
+export const getEventById = (id) => {
+  return api.get(`/events/${id}`);
+};
+
+// ── Seats ────────────────────────────────────────────────
+
+export const getSeatsByEvent = (eventId) => {
+  return api.get(`/events/${eventId}/seats`);
+};
+
+// ── Bookings ─────────────────────────────────────────────
+
+export const holdSeats = (eventId, seatIds, userId) => {
+  return api.post('/bookings/hold', { eventId, seatIds, userId });
+};
+
+export const confirmBooking = (eventId, seatIds, userId) => {
+  return api.post('/bookings/confirm', { eventId, seatIds, userId });
+};
+
+export const cancelBooking = (bookingId, userId) => {
+  return api.post(`/bookings/${bookingId}/cancel`, { userId });
+};
+
+export const getBookings = (userId) => {
+  return api.get('/bookings', { params: { userId } });
+};
+
+export const getBookingById = (id) => {
+  return api.get(`/bookings/${id}`);
+};
+
 export default api;
