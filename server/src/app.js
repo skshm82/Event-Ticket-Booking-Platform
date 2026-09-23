@@ -5,17 +5,30 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 // Middleware
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return true;
+  if (process.env.CLIENT_URL && origin.replace(/\/$/, '') === process.env.CLIENT_URL.replace(/\/$/, '')) {
+    return true;
+  }
+  try {
+    const host = new URL(origin).hostname;
+    if (host.endsWith('.onrender.com')) return true;
+  } catch (e) {}
+  return false;
+};
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      const allowed = process.env.CLIENT_URL;
-      if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin) || origin === allowed) {
+      if (isAllowedOrigin(origin)) {
         return callback(null, true);
       }
-      return callback(null, false);
+      return callback(new Error(`Not allowed by CORS: ${origin}`));
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 app.use(express.json());

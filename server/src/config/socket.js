@@ -7,10 +7,16 @@ const initSocket = (httpServer) => {
   io = new Server(httpServer, {
     cors: {
       origin: (origin, callback) => {
-        const allowed = process.env.CLIENT_URL;
-        if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin) || origin === allowed) {
+        if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin)) {
           return callback(null, true);
         }
+        if (process.env.CLIENT_URL && origin.replace(/\/$/, '') === process.env.CLIENT_URL.replace(/\/$/, '')) {
+          return callback(null, true);
+        }
+        try {
+          const host = new URL(origin).hostname;
+          if (host.endsWith('.onrender.com')) return callback(null, true);
+        } catch (e) {}
         return callback(null, false);
       },
       methods: ['GET', 'POST'],
