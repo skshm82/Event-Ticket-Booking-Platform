@@ -10,18 +10,18 @@ import LoadingSpinner from '../components/LoadingSpinner';
 const DEMO_USER = 'demo-user';
 
 const CATEGORY_COLORS = {
-  concert: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-  sports: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-  theater: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-  comedy: 'bg-pink-500/20 text-pink-300 border-pink-500/30',
+  concert: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  sports: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  theater: 'bg-amber-50 text-amber-800 border-amber-200',
+  comedy: 'bg-rose-50 text-rose-700 border-rose-200',
 };
 
 function formatDate(dateStr) {
   const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString('en-IN', {
     weekday: 'long',
-    month: 'long',
     day: 'numeric',
+    month: 'long',
     year: 'numeric',
   });
 }
@@ -130,7 +130,6 @@ export default function EventDetailPage() {
       setSeats(seatsRes.data);
     } catch (err) {
       toast.error(err.message || 'Failed to hold seats');
-      // Some seats may no longer be available, refresh
       const seatsRes = await getSeatsByEvent(id);
       setSeats(seatsRes.data);
       setSelectedSeatIds([]);
@@ -167,7 +166,7 @@ export default function EventDetailPage() {
     setBookingStep('select');
     setSelectedSeatIds([]);
     setHoldData(null);
-    loadData(); // Refresh all data
+    loadData();
   };
 
   // Reset to start over
@@ -190,9 +189,9 @@ export default function EventDetailPage() {
 
   if (error) {
     return (
-      <div className="text-center py-16 space-y-4">
-        <span className="text-5xl block">😕</span>
-        <p className="text-red-400">{error}</p>
+      <div className="text-center py-16 space-y-4 bg-white border border-slate-200 rounded-xl p-8 max-w-md mx-auto">
+        <span className="text-4xl block">😕</span>
+        <p className="text-rose-600 font-medium">{error}</p>
         <Link to="/" className="btn-secondary inline-block">
           ← Back to Events
         </Link>
@@ -205,11 +204,11 @@ export default function EventDetailPage() {
   const catColors = CATEGORY_COLORS[event.category] || '';
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6">
       {/* Back link */}
       <Link
         to="/"
-        className="inline-flex items-center gap-1 text-sm text-surface-400 hover:text-surface-200 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
         id="back-to-events"
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -218,67 +217,98 @@ export default function EventDetailPage() {
         Back to Events
       </Link>
 
-      {/* Event header */}
-      <section className="glass-card p-6 sm:p-8 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 flex-wrap">
+      {/* Event header card with picture (Light mode, sleek white, no gradients) */}
+      <section className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
+        {event.imageUrl && (
+          <div className="h-48 sm:h-64 w-full bg-slate-100 relative overflow-hidden border-b border-slate-100">
+            <img
+              src={event.imageUrl}
+              alt={event.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            <div className="absolute top-4 left-4">
               <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${catColors}`}
+                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${catColors} bg-white/95 backdrop-blur-xs shadow-xs`}
               >
-                {event.category}
+                <span className="capitalize">{event.category}</span>
               </span>
-              <span className="badge-success">{event.availableSeats} seats left</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-surface-100">{event.title}</h1>
-            {event.description && (
-              <p className="text-surface-400 max-w-2xl">{event.description}</p>
-            )}
           </div>
-          <div className="text-right shrink-0">
-            <p className="text-3xl font-bold text-primary-400">${event.price}</p>
-            <p className="text-sm text-surface-500">per seat</p>
+        )}
+        <div className="p-6 sm:p-8 space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+            <div className="space-y-3">
+              {!event.imageUrl && (
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${catColors}`}
+                  >
+                    <span className="capitalize">{event.category}</span>
+                  </span>
+                  <span className="badge badge-success">{event.availableSeats} seats left</span>
+                </div>
+              )}
+              {event.imageUrl && (
+                <div>
+                  <span className="badge badge-success">{event.availableSeats} seats left</span>
+                </div>
+              )}
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">{event.title}</h1>
+              {event.description && (
+                <p className="text-slate-600 max-w-2xl text-sm leading-relaxed">{event.description}</p>
+              )}
+            </div>
+            <div className="text-left sm:text-right shrink-0 bg-slate-50 sm:bg-transparent p-3 sm:p-0 rounded-lg border sm:border-0 border-slate-200">
+              <p className="text-2xl sm:text-3xl font-extrabold text-slate-900">₹{event.price?.toLocaleString('en-IN')}</p>
+              <p className="text-xs text-slate-500 font-medium">per seat</p>
+            </div>
           </div>
-        </div>
 
         {/* Event meta */}
-        <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 border-t border-surface-800">
-          <div className="flex items-center gap-2 text-surface-300">
-            <svg className="w-4 h-4 text-surface-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        <div className="flex flex-wrap gap-x-6 gap-y-2 pt-3 border-t border-slate-100 text-sm">
+          <div className="flex items-center gap-1.5 text-slate-600 font-medium">
+            <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span>{event.venue?.name}</span>
           </div>
-          <div className="flex items-center gap-2 text-surface-300">
-            <svg className="w-4 h-4 text-surface-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <div className="flex items-center gap-1.5 text-slate-600 font-medium">
+            <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             <span>{formatDate(event.date)}</span>
           </div>
-          <div className="flex items-center gap-2 text-surface-300">
-            <svg className="w-4 h-4 text-surface-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div className="flex items-center gap-1.5 text-slate-600 font-medium">
+            <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>{formatTime(event.time)}</span>
           </div>
-          <div className="flex items-center gap-2 text-surface-300">
-            <svg className="w-4 h-4 text-surface-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          <div className="flex items-center gap-1.5 text-slate-600 font-medium">
+            <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
             </svg>
             <span>
-              {event.venue?.rows} × {event.venue?.columns} ({event.totalSeats} total seats)
+              {event.venue?.rows} × {event.venue?.columns} ({event.totalSeats} seats)
             </span>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* Main content: seat map + booking panel */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Seat Map */}
         <div className="lg:col-span-2">
-          <div className="glass-card p-6">
-            <h2 className="text-lg font-semibold text-surface-200 mb-4">Select Your Seats</h2>
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+              <h2 className="text-base font-bold text-slate-900">Select Your Seats</h2>
+              <span className="text-xs text-slate-500 font-medium">Max 6 seats per booking</span>
+            </div>
             <SeatMap
               seats={seats}
               rows={event.venue?.rows || 0}
@@ -292,39 +322,39 @@ export default function EventDetailPage() {
 
         {/* Booking panel */}
         <div className="space-y-4">
-          <div className="glass-card p-6 space-y-5 lg:sticky lg:top-24">
-            <h2 className="text-lg font-semibold text-surface-200">Booking Summary</h2>
+          <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-5 lg:sticky lg:top-24 shadow-xs">
+            <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Booking Summary</h2>
 
             {/* Selected seats */}
             {selectedSeatIds.length > 0 ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-surface-400">Selected Seats</span>
-                  <span className="text-surface-300">{selectedSeatIds.length}</span>
+                  <span className="text-slate-600 font-medium">Selected Seats</span>
+                  <span className="font-bold text-slate-900">{selectedSeatIds.length}</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {selectedLabels.map((label) => (
                     <span
                       key={label}
-                      className="inline-block px-2 py-1 bg-seat-selected/20 border border-seat-selected/30 rounded-md text-xs font-mono text-blue-300"
+                      className="inline-block px-2 py-0.5 bg-slate-100 border border-slate-200 rounded text-xs font-mono font-bold text-slate-800"
                     >
                       {label}
                     </span>
                   ))}
                 </div>
-                <div className="pt-3 border-t border-surface-800 flex items-center justify-between">
-                  <span className="text-surface-400">Total</span>
-                  <span className="text-2xl font-bold text-surface-100">
-                    ${totalPrice}
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-slate-600 font-semibold">Total Amount</span>
+                  <span className="text-2xl font-extrabold text-slate-900">
+                    ₹{totalPrice?.toLocaleString('en-IN')}
                   </span>
                 </div>
-                <p className="text-xs text-surface-500">
-                  {selectedSeatIds.length} × ${event.price} per seat
+                <p className="text-xs text-slate-500 font-medium">
+                  {selectedSeatIds.length} × ₹{event.price?.toLocaleString('en-IN')} per seat (Inclusive of GST)
                 </p>
               </div>
             ) : (
-              <p className="text-sm text-surface-500 py-4 text-center">
-                Click on available seats to select them
+              <p className="text-sm text-slate-500 py-6 text-center font-normal">
+                Click on any green available seat on the map to select it
               </p>
             )}
 
@@ -337,7 +367,7 @@ export default function EventDetailPage() {
             )}
 
             {/* Action buttons */}
-            <div className="space-y-2">
+            <div className="space-y-2 pt-2">
               {bookingStep === 'select' && (
                 <button
                   id="hold-seats-btn"
@@ -346,7 +376,7 @@ export default function EventDetailPage() {
                   className="btn-primary w-full"
                 >
                   {processing
-                    ? 'Holding...'
+                    ? 'Holding Seats...'
                     : `Hold ${selectedSeatIds.length || ''} Seat${selectedSeatIds.length !== 1 ? 's' : ''}`}
                 </button>
               )}
@@ -359,7 +389,7 @@ export default function EventDetailPage() {
                     disabled={processing}
                     className="btn-primary w-full"
                   >
-                    {processing ? 'Confirming...' : `Confirm Booking — $${totalPrice}`}
+                    {processing ? 'Confirming...' : `Pay & Confirm — ₹${totalPrice?.toLocaleString('en-IN')}`}
                   </button>
                   <button
                     id="cancel-hold-btn"
@@ -374,17 +404,18 @@ export default function EventDetailPage() {
 
               {bookingStep === 'confirming' && (
                 <div className="text-center py-4">
-                  <LoadingSpinner size="sm" text="Processing payment..." />
+                  <LoadingSpinner size="sm" text="Securing your tickets..." />
                 </div>
               )}
 
               {bookingStep === 'confirmed' && (
-                <div className="text-center space-y-3">
-                  <div className="py-4">
-                    <span className="text-4xl block mb-2">🎉</span>
-                    <p className="text-lg font-semibold text-green-400">
+                <div className="text-center space-y-3 pt-2">
+                  <div className="py-2">
+                    <span className="text-4xl block mb-1">🎉</span>
+                    <p className="text-base font-bold text-emerald-700">
                       Booking Confirmed!
                     </p>
+                    <p className="text-xs text-slate-500 mt-1">E-ticket details sent</p>
                   </div>
                   <Link to="/bookings" className="btn-primary w-full inline-block text-center">
                     View My Bookings

@@ -32,15 +32,15 @@ export default function CountdownTimer({ expiresAt, onExpire }) {
   return (
     <div
       id="countdown-timer"
-      className={`flex flex-col items-center gap-2 p-4 rounded-xl border ${
+      className={`flex flex-col items-center gap-2.5 p-4 rounded-xl border transition-colors ${
         isUrgent
-          ? 'bg-red-500/10 border-red-500/30 animate-pulse'
-          : 'bg-amber-500/10 border-amber-500/30'
+          ? 'bg-rose-50 border-rose-200'
+          : 'bg-amber-50 border-amber-200'
       }`}
     >
       <div className="flex items-center gap-2">
         <svg
-          className={`w-4 h-4 ${isUrgent ? 'text-red-400' : 'text-amber-400'}`}
+          className={`w-4 h-4 ${isUrgent ? 'text-rose-600' : 'text-amber-700'}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -53,29 +53,27 @@ export default function CountdownTimer({ expiresAt, onExpire }) {
           />
         </svg>
         <span
-          className={`text-xs font-medium ${
-            isUrgent ? 'text-red-400' : 'text-amber-400'
+          className={`text-xs font-semibold ${
+            isUrgent ? 'text-rose-700' : 'text-amber-800'
           }`}
         >
-          Hold expires in
+          Seat hold expires in
         </span>
       </div>
 
       <span
-        className={`text-2xl font-bold font-mono ${
-          isUrgent ? 'text-red-300' : 'text-amber-300'
+        className={`text-2xl font-bold font-mono tracking-tight ${
+          isUrgent ? 'text-rose-700' : 'text-amber-900'
         }`}
       >
         {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
       </span>
 
-      {/* Progress bar */}
-      <div className="w-full h-1 bg-surface-800 rounded-full overflow-hidden">
+      {/* Progress bar — Solid, no gradients */}
+      <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-1000 ${
-            isUrgent
-              ? 'bg-gradient-to-r from-red-500 to-red-400'
-              : 'bg-gradient-to-r from-amber-500 to-amber-400'
+            isUrgent ? 'bg-rose-600' : 'bg-amber-500'
           }`}
           style={{ width: `${progress}%` }}
         />

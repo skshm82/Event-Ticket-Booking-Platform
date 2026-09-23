@@ -11,20 +11,22 @@ export default function Navbar() {
   return (
     <nav
       id="navbar"
-      className="border-b border-surface-800 bg-surface-950/80 backdrop-blur-xl sticky top-0 z-50"
+      className="border-b border-slate-200 bg-white/90 backdrop-blur-md sticky top-0 z-50 transition-colors"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group" id="nav-logo">
-            <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
-              🎫
+            <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 text-white font-extrabold text-sm tracking-tighter">
+              e.
             </span>
-            <span className="text-xl font-bold gradient-text">EventBook</span>
+            <span className="text-xl font-extrabold tracking-tight text-slate-900">
+              entrio
+            </span>
           </Link>
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {NAV_LINKS.map((link) => {
               const isActive =
                 link.to === '/'
@@ -37,24 +39,24 @@ export default function Navbar() {
                   to={link.to}
                   id={`nav-${link.label.toLowerCase().replace(/\s/g, '-')}`}
                   className={`
-                    flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium
-                    transition-all duration-200
+                    flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium
+                    transition-colors duration-150
                     ${
                       isActive
-                        ? 'bg-primary-600/20 text-primary-300'
-                        : 'text-surface-400 hover:text-surface-200 hover:bg-surface-800'
+                        ? 'bg-slate-900 text-white'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }
                   `}
                 >
-                  <span className="text-base">{link.icon}</span>
+                  <span className="text-sm">{link.icon}</span>
                   <span className="hidden sm:inline">{link.label}</span>
                 </Link>
               );
             })}
 
             {/* Demo user badge */}
-            <div className="ml-3 pl-3 border-l border-surface-700">
-              <span className="badge-info" id="nav-user-badge">
+            <div className="ml-2 pl-2 sm:ml-3 sm:pl-3 border-l border-slate-200">
+              <span className="badge badge-info" id="nav-user-badge">
                 Demo User
               </span>
             </div>

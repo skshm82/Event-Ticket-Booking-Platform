@@ -1,9 +1,9 @@
 const CATEGORIES = [
   { key: 'all', label: 'All Events', emoji: '🎪' },
   { key: 'concert', label: 'Concerts', emoji: '🎵' },
-  { key: 'sports', label: 'Sports', emoji: '🏀' },
-  { key: 'theater', label: 'Theater', emoji: '🎭' },
-  { key: 'comedy', label: 'Comedy', emoji: '😂' },
+  { key: 'sports', label: 'Sports & Cricket', emoji: '🏏' },
+  { key: 'theater', label: 'Theater & Plays', emoji: '🎭' },
+  { key: 'comedy', label: 'Stand-up Comedy', emoji: '🎙️' },
 ];
 
 export default function CategoryFilter({ active, onChange }) {
@@ -16,11 +16,11 @@ export default function CategoryFilter({ active, onChange }) {
           onClick={() => onChange(cat.key)}
           className={`
             inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium
-            transition-all duration-200 border
+            transition-all duration-150 border
             ${
               active === cat.key
-                ? 'bg-primary-600/30 border-primary-500/50 text-primary-300 shadow-lg shadow-primary-500/10'
-                : 'bg-surface-800/50 border-surface-700 text-surface-400 hover:bg-surface-700/50 hover:text-surface-200 hover:border-surface-600'
+                ? 'bg-slate-900 border-slate-900 text-white shadow-xs'
+                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300'
             }
           `}
         >

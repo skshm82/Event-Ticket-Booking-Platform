@@ -11,13 +11,7 @@ function App() {
   return (
     <ToastProvider>
       <BrowserRouter>
-        <div className="min-h-screen bg-surface-950">
-          {/* Gradient background glow */}
-          <div className="fixed inset-0 -z-10 overflow-hidden">
-            <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary-600/10 blur-3xl" />
-            <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-accent-600/10 blur-3xl" />
-          </div>
-
+        <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
           {/* Navbar */}
           <Navbar />
 
@@ -25,7 +19,7 @@ function App() {
           <Toast />
 
           {/* Main content */}
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/events/:id" element={<EventDetailPage />} />
@@ -33,6 +27,18 @@ function App() {
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
+
+          {/* Minimalist footer */}
+          <footer className="border-t border-slate-200 bg-white py-6 mt-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-slate-900 tracking-tight">entrio</span>
+                <span>·</span>
+                <span>Real-time ticket booking platform</span>
+              </div>
+              <p>© 2026 entrio. All prices in Indian Rupees (INR ₹).</p>
+            </div>
+          </footer>
         </div>
       </BrowserRouter>
     </ToastProvider>

@@ -23,6 +23,20 @@ const start = async () => {
   const redisConnection = new Redis(process.env.REDIS_URL, {
     maxRetriesPerRequest: null,
     enableReadyCheck: false,
+    family: 4, // Force IPv4 to prevent IPv6 ETIMEDOUT
+    connectTimeout: 20000,
+    retryStrategy(times) {
+      const delay = Math.min(times * 100, 3000);
+      return delay;
+    },
+  });
+
+  redisConnection.on('connect', () => {
+    console.log('[Worker] Redis connected');
+  });
+
+  redisConnection.on('error', (err) => {
+    console.error('[Worker] Redis error:', err.message);
   });
 
   // Hold expiry worker
@@ -44,6 +58,10 @@ const start = async () => {
 
   holdExpiryWorker.on('failed', (job, err) => {
     console.error(`[Worker] Hold expiry job ${job?.id} failed:`, err.message);
+  });
+
+  holdExpiryWorker.on('error', (err) => {
+    console.error('[Worker] Hold expiry worker error:', err.message);
   });
 
   // Notification worker
@@ -68,6 +86,10 @@ const start = async () => {
       `[Worker] Notification job ${job?.id} failed:`,
       err.message
     );
+  });
+
+  notificationWorker.on('error', (err) => {
+    console.error('[Worker] Notification worker error:', err.message);
   });
 
   console.log(

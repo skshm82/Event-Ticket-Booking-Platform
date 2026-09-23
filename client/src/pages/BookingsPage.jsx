@@ -7,7 +7,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 const DEMO_USER = 'demo-user';
 
 const STATUS_FILTERS = [
-  { key: 'all', label: 'All' },
+  { key: 'all', label: 'All Bookings' },
   { key: 'confirmed', label: 'Confirmed' },
   { key: 'cancelled', label: 'Cancelled' },
 ];
@@ -43,8 +43,7 @@ export default function BookingsPage() {
     setCancellingId(bookingId);
     try {
       await cancelBooking(bookingId, DEMO_USER);
-      toast.success('Booking cancelled');
-      // Update locally
+      toast.success('Booking cancelled successfully');
       setBookings((prev) =>
         prev.map((b) =>
           b._id === bookingId
@@ -69,27 +68,27 @@ export default function BookingsPage() {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-surface-100">My Bookings</h1>
-          <p className="text-surface-400 mt-1">
-            {bookings.length} booking{bookings.length !== 1 ? 's' : ''} total
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">My Bookings</h1>
+          <p className="text-sm text-slate-500 mt-1 font-medium">
+            {bookings.length} total booking{bookings.length !== 1 ? 's' : ''} on record
           </p>
         </div>
 
-        {/* Status filter */}
-        <div className="flex gap-1 bg-surface-900 rounded-xl p-1 border border-surface-800">
+        {/* Status filter tabs */}
+        <div className="flex gap-1 bg-slate-100 rounded-lg p-1 border border-slate-200">
           {STATUS_FILTERS.map((f) => (
             <button
               key={f.key}
               id={`filter-status-${f.key}`}
               onClick={() => setStatusFilter(f.key)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all ${
                 statusFilter === f.key
-                  ? 'bg-surface-700 text-surface-100'
-                  : 'text-surface-400 hover:text-surface-200'
+                  ? 'bg-white text-slate-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               {f.label}
@@ -100,8 +99,8 @@ export default function BookingsPage() {
 
       {/* Error */}
       {error && (
-        <div className="text-center py-8">
-          <p className="text-red-400 mb-3">{error}</p>
+        <div className="text-center py-8 bg-white border border-slate-200 rounded-xl p-6">
+          <p className="text-rose-600 font-medium mb-3">{error}</p>
           <button onClick={fetchBookings} className="btn-secondary">
             Try Again
           </button>
@@ -110,17 +109,17 @@ export default function BookingsPage() {
 
       {/* Bookings list */}
       {!error && filteredBookings.length === 0 ? (
-        <div className="text-center py-16 space-y-3">
-          <span className="text-5xl block">🎟️</span>
-          <h2 className="text-xl font-semibold text-surface-300">
+        <div className="text-center py-16 space-y-3 bg-white border border-slate-200 rounded-xl p-8">
+          <span className="text-4xl block">🎟️</span>
+          <h2 className="text-lg font-bold text-slate-900">
             {statusFilter === 'all'
               ? 'No bookings yet'
-              : `No ${statusFilter} bookings`}
+              : `No ${statusFilter} bookings found`}
           </h2>
-          <p className="text-surface-500">
+          <p className="text-sm text-slate-500">
             {statusFilter === 'all'
-              ? 'Browse events and book your first tickets!'
-              : 'Try a different filter to see more bookings.'}
+              ? 'Browse upcoming events in India and book your tickets!'
+              : 'Try switching filters to view your other bookings.'}
           </p>
         </div>
       ) : (

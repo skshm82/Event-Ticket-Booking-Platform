@@ -9,13 +9,13 @@ const { getSeatLabel, EVENT_CATEGORIES } = require('../../../shared/constants');
 
 const isProd = process.argv.includes('--prod');
 
-// Demo venues
+// Demo Indian venues
 const venueData = [
-  { name: 'Grand Arena', rows: 8, columns: 10 },
-  { name: 'Skyline Theater', rows: 10, columns: 15 },
+  { name: 'Nita Mukesh Ambani Cultural Centre (NMACC), Mumbai', rows: 8, columns: 10 },
+  { name: 'Bharat Mandapam, New Delhi', rows: 10, columns: 15 },
 ];
 
-// Demo events — dates are set in the future relative to seed time
+// Demo Indian events — dates are set in the future relative to seed time
 const getEventData = (venueMap) => {
   const now = new Date();
   const daysFromNow = (days) => {
@@ -26,59 +26,59 @@ const getEventData = (venueMap) => {
 
   return [
     {
-      title: 'Rock Concert 2026',
+      title: 'Arijit Singh Live — Soulful Symphony Tour',
       description:
-        'Experience the electrifying energy of live rock music with top bands performing their greatest hits. Prepare for an unforgettable night of powerful guitar riffs, thundering drums, and roaring vocals.',
-      venue: venueMap['Grand Arena'],
+        'Experience the magical voice of India’s favourite playback singer live with a 40-piece grand orchestra. Sing along to Tum Hi Ho, Kesariya, Channa Mereya, and more.',
+      venue: venueMap['Nita Mukesh Ambani Cultural Centre (NMACC), Mumbai'],
       date: daysFromNow(7),
       time: '19:00',
       category: 'concert',
-      price: 75,
-      imageUrl: '',
+      price: 1999,
+      imageUrl: '/images/arijit-singh.jpg',
     },
     {
-      title: 'Jazz Night Under the Stars',
+      title: 'IPL 2026: Mumbai Indians vs Chennai Super Kings',
       description:
-        'An intimate evening of smooth jazz, soulful melodies, and improvisational brilliance. Enjoy world-class musicians in a relaxed, open-air setting with craft cocktails.',
-      venue: venueMap['Skyline Theater'],
-      date: daysFromNow(14),
-      time: '20:00',
-      category: 'concert',
-      price: 60,
-      imageUrl: '',
-    },
-    {
-      title: 'Championship Basketball Finals',
-      description:
-        'The biggest game of the season! Watch the top two teams battle it out for the championship title in this high-stakes, action-packed matchup.',
-      venue: venueMap['Grand Arena'],
+        'The El Clásico of Indian cricket! Catch Rohit Sharma and MS Dhoni’s squads clash in an electrifying high-stakes T20 encounter under the stadium lights.',
+      venue: venueMap['Bharat Mandapam, New Delhi'],
       date: daysFromNow(10),
-      time: '18:30',
-      category: 'sports',
-      price: 120,
-      imageUrl: '',
-    },
-    {
-      title: 'Shakespeare: A Midsummer Night\'s Dream',
-      description:
-        'A magical retelling of Shakespeare\'s beloved comedy, featuring stunning costumes, enchanting set design, and a talented ensemble cast that brings the fairy realm to life.',
-      venue: venueMap['Skyline Theater'],
-      date: daysFromNow(21),
       time: '19:30',
-      category: 'theater',
-      price: 50,
-      imageUrl: '',
+      category: 'sports',
+      price: 2499,
+      imageUrl: '/images/ipl-cricket.jpg',
     },
     {
-      title: 'Stand-Up Comedy Showcase',
+      title: 'Zakir Khan: Tathastu & Beyond Live',
       description:
-        'Get ready to laugh until your sides hurt! Featuring five of the hottest rising comedians, this showcase delivers an evening of sharp wit, hilarious observations, and non-stop entertainment.',
-      venue: venueMap['Grand Arena'],
+        'The Sakht Launda returns with an all-new 90-minute stand-up special featuring hilarious and heartwarming stories of childhood, relationships, and modern Indian life.',
+      venue: venueMap['Nita Mukesh Ambani Cultural Centre (NMACC), Mumbai'],
       date: daysFromNow(5),
-      time: '21:00',
+      time: '20:00',
       category: 'comedy',
-      price: 35,
-      imageUrl: '',
+      price: 999,
+      imageUrl: '/images/zakir-khan.jpg',
+    },
+    {
+      title: 'Mughal-e-Azam: The Grand Musical',
+      description:
+        'Director Feroz Abbas Khan’s award-winning Broadway-scale musical with opulent Manish Malhotra costumes, live Kathak performances, and timeless classic songs.',
+      venue: venueMap['Bharat Mandapam, New Delhi'],
+      date: daysFromNow(21),
+      time: '18:30',
+      category: 'theater',
+      price: 1499,
+      imageUrl: '/images/mughal-e-azam.jpg',
+    },
+    {
+      title: 'Anoushka Shankar & Ustad Zakir Hussain: Sitar & Tabla Jugalbandi',
+      description:
+        'A transcendent evening of Indian classical music uniting Grammy-nominated sitar virtuoso Anoushka Shankar with living legend Ustad Zakir Hussain.',
+      venue: venueMap['Nita Mukesh Ambani Cultural Centre (NMACC), Mumbai'],
+      date: daysFromNow(14),
+      time: '19:00',
+      category: 'concert',
+      price: 1299,
+      imageUrl: '/images/jugalbandi.jpg',
     },
   ];
 };
@@ -129,7 +129,7 @@ async function seed() {
     console.log('  ✓ Cleared all collections');
 
     // Create venues
-    console.log('\nCreating venues...');
+    console.log('\nCreating Indian venues...');
     const venues = [];
     const venueMap = {};
     for (const data of venueData) {
@@ -140,7 +140,7 @@ async function seed() {
     }
 
     // Create events and generate seats
-    console.log('\nCreating events and generating seats...');
+    console.log('\nCreating Indian events and generating seats...');
     const eventDataList = getEventData(venueMap);
     let totalSeatsGenerated = 0;
 
@@ -154,13 +154,13 @@ async function seed() {
 
       totalSeatsGenerated += seats.length;
       console.log(
-        `  ✓ ${event.title} (${event.category}) — ${seats.length} seats @ $${event.price}`
+        `  ✓ ${event.title} (${event.category}) — ${seats.length} seats @ ₹${event.price}`
       );
     }
 
     // Summary
     console.log('\n═══════════════════════════════════════════');
-    console.log('  Seed Summary');
+    console.log('  Seed Summary (Indian Context & INR)');
     console.log('═══════════════════════════════════════════');
     console.log(`  Venues created:    ${venues.length}`);
     console.log(`  Events created:    ${eventDataList.length}`);
