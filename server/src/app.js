@@ -53,13 +53,26 @@ app.get('/api/health', async (req, res) => {
   });
 });
 
-// Serve client build in production
+// Serve client build in production if available, else API info
 if (process.env.NODE_ENV === 'production') {
   const path = require('path');
-  app.use(express.static(path.join(__dirname, '../../client/dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
-  });
+  const fs = require('fs');
+  const clientDistPath = path.join(__dirname, '../../client/dist');
+  
+  if (fs.existsSync(path.join(clientDistPath, 'index.html'))) {
+    app.use(express.static(clientDistPath));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+    });
+  } else {
+    app.get('/', (req, res) => {
+      res.json({
+        name: 'entrio API Server',
+        status: 'online',
+        health: '/api/health',
+      });
+    });
+  }
 }
 
 // 404 handler

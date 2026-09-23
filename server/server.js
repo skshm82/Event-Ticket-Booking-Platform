@@ -5,6 +5,7 @@ const app = require('./src/app');
 const connectDB = require('./src/config/db');
 const { getRedisClient } = require('./src/config/redis');
 const { initSocket } = require('./src/config/socket');
+const { initWorkers } = require('./src/workers/embeddedWorker');
 
 const PORT = process.env.PORT || 5000;
 
@@ -21,6 +22,9 @@ const start = async () => {
     console.error('Redis connection failed:', err.message);
     console.warn('Server starting without Redis — seat locks will not work.');
   }
+
+  // Initialize embedded BullMQ worker inside the server (free tier friendly)
+  initWorkers();
 
   // Create HTTP server and attach Socket.io
   const httpServer = http.createServer(app);
