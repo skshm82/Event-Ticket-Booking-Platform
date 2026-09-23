@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getBookings, cancelBooking } from '../services/api';
 import { useToast } from '../hooks/useToast';
+import { useAuth } from '../hooks/AuthContext';
 import BookingCard from '../components/BookingCard';
 import LoadingSpinner from '../components/LoadingSpinner';
-
-const DEMO_USER = 'demo-user';
 
 const STATUS_FILTERS = [
   { key: 'all', label: 'All Bookings' },
@@ -14,6 +13,7 @@ const STATUS_FILTERS = [
 
 export default function BookingsPage() {
   const toast = useToast();
+  const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,7 +24,7 @@ export default function BookingsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await getBookings(DEMO_USER);
+      const res = await getBookings(user._id);
       setBookings(res.data);
     } catch (err) {
       setError(err.message || 'Failed to load bookings');
@@ -42,7 +42,7 @@ export default function BookingsPage() {
 
     setCancellingId(bookingId);
     try {
-      await cancelBooking(bookingId, DEMO_USER);
+      await cancelBooking(bookingId, user._id);
       toast.success('Booking cancelled successfully');
       setBookings((prev) =>
         prev.map((b) =>

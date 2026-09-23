@@ -8,7 +8,8 @@ const app = express();
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin)) {
+      const allowed = process.env.CLIENT_URL;
+      if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin) || origin === allowed) {
         return callback(null, true);
       }
       return callback(null, false);
@@ -20,6 +21,7 @@ app.use(
 app.use(express.json());
 
 // Routes
+app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/venues', require('./routes/venueRoutes'));
 app.use('/api/events', require('./routes/eventRoutes'));
 app.use('/api/events/:eventId/seats', require('./routes/seatRoutes'));
@@ -50,6 +52,15 @@ app.get('/api/health', async (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Serve client build in production
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path');
+  app.use(express.static(path.join(__dirname, '../../client/dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+  });
+}
 
 // 404 handler
 app.use((req, res) => {

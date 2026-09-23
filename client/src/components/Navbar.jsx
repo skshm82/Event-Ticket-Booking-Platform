@@ -1,4 +1,5 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/AuthContext';
 
 const NAV_LINKS = [
   { to: '/', label: 'Browse Events', icon: '🎪' },
@@ -7,6 +8,13 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const { pathname } = useLocation();
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <nav
@@ -54,11 +62,33 @@ export default function Navbar() {
               );
             })}
 
-            {/* Demo user badge */}
-            <div className="ml-2 pl-2 sm:ml-3 sm:pl-3 border-l border-slate-200">
-              <span className="badge badge-info" id="nav-user-badge">
-                Demo User
-              </span>
+            {/* User section */}
+            <div className="ml-2 pl-2 sm:ml-3 sm:pl-3 border-l border-slate-200 flex items-center gap-2">
+              {isAuthenticated ? (
+                <>
+                  <span
+                    className="hidden sm:inline text-sm font-semibold text-slate-700"
+                    id="nav-user-name"
+                  >
+                    {user?.name}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    id="nav-logout-btn"
+                    className="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-600 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  id="nav-login-link"
+                  className="px-3 py-1.5 rounded-md text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>

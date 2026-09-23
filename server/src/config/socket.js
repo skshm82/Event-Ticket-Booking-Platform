@@ -7,7 +7,8 @@ const initSocket = (httpServer) => {
   io = new Server(httpServer, {
     cors: {
       origin: (origin, callback) => {
-        if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin)) {
+        const allowed = process.env.CLIENT_URL;
+        if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin) || origin === allowed) {
           return callback(null, true);
         }
         return callback(null, false);

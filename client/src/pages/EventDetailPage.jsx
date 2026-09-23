@@ -1,13 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getEventById, getSeatsByEvent, holdSeats, confirmBooking } from '../services/api';
 import { getSocket } from '../services/socket';
 import { useToast } from '../hooks/useToast';
+import { useAuth } from '../hooks/AuthContext';
 import SeatMap from '../components/SeatMap';
 import CountdownTimer from '../components/CountdownTimer';
 import LoadingSpinner from '../components/LoadingSpinner';
-
-const DEMO_USER = 'demo-user';
 
 const CATEGORY_COLORS = {
   concert: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -37,6 +36,8 @@ function formatTime(time) {
 export default function EventDetailPage() {
   const { id } = useParams();
   const toast = useToast();
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   // Data states
   const [event, setEvent] = useState(null);
@@ -116,9 +117,15 @@ export default function EventDetailPage() {
   const handleHoldSeats = async () => {
     if (selectedSeatIds.length === 0) return;
 
+    if (!isAuthenticated) {
+      toast.info('Please login to book tickets');
+      navigate('/login');
+      return;
+    }
+
     setProcessing(true);
     try {
-      const res = await holdSeats(id, selectedSeatIds, DEMO_USER);
+      const res = await holdSeats(id, selectedSeatIds, user._id);
       setHoldData({
         expiresAt: res.data.expiresAt,
       });
@@ -143,7 +150,7 @@ export default function EventDetailPage() {
     setProcessing(true);
     setBookingStep('confirming');
     try {
-      await confirmBooking(id, selectedSeatIds, DEMO_USER);
+      await confirmBooking(id, selectedSeatIds, user._id);
       setBookingStep('confirmed');
       toast.success('Booking confirmed! 🎉');
 

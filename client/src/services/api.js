@@ -1,11 +1,22 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_SERVER_URL
+    ? `${import.meta.env.VITE_SERVER_URL}/api`
+    : '/api',
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000,
+});
+
+// Request interceptor — attach JWT token if present
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('entrio_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 // Response interceptor for consistent error handling
@@ -18,6 +29,14 @@ api.interceptors.response.use(
       error.message ||
       'Something went wrong';
 
+    // If 401 and not on an auth endpoint, clear token (session expired)
+    if (
+      error.response?.status === 401 &&
+      !error.config?.url?.startsWith('/auth')
+    ) {
+      localStorage.removeItem('entrio_token');
+    }
+
     return Promise.reject({
       message,
       status: error.response?.status,
@@ -25,6 +44,20 @@ api.interceptors.response.use(
     });
   }
 );
+
+// ── Auth ─────────────────────────────────────────────────
+
+export const registerUser = (name, phone, password) => {
+  return api.post('/auth/register', { name, phone, password });
+};
+
+export const loginUser = (phone, password) => {
+  return api.post('/auth/login', { phone, password });
+};
+
+export const getCurrentUser = () => {
+  return api.get('/auth/me');
+};
 
 // ── Events ───────────────────────────────────────────────
 
